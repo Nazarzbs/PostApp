@@ -11,7 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		0471375E2F17AC02005DD7B2 /* Exceptions for "PostApp" folder in "PostApp" target */ = {
+		0495898B2F17E6AF0003EABE /* Exceptions for "PostApp" folder in "PostApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -24,7 +24,7 @@
 		0471374E2F17AC01005DD7B2 /* PostApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				0471375E2F17AC02005DD7B2 /* Exceptions for "PostApp" folder in "PostApp" target */,
+				0495898B2F17E6AF0003EABE /* Exceptions for "PostApp" folder in "PostApp" target */,
 			);
 			path = PostApp;
 			sourceTree = "<group>";

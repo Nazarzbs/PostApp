@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct PostListResponse: Codable {
+struct PostListResponse: Codable, Sendable {
     let posts: [Post]
 }
 
-struct Post: Codable {
+struct Post: Codable, Hashable, Sendable {
     let postId: Int
     let timeshamp: TimeInterval
     let title: String
@@ -33,7 +33,7 @@ struct PostDetailResponse: Codable {
     let post: PostDetail
 }
 
-struct PostDetail: Codable {
+struct PostDetail: Codable, Sendable {
     let postId: Int
     let timeshamp: TimeInterval
     let title: String

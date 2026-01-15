@@ -1,6 +1,11 @@
 # PostApp
 
+<p float="middle">
+  <img src="https://github.com/user-attachments/assets/5e738ce2-33b4-4ed5-a03b-487f0f7f63db" width="450">
+</p>
+
 ## Features
+
 
 - **Dynamic Feed**: Post descriptions with interactive "Expand/Collapse" functionality
 - **Modern Concurrency**: Built entirely using async/await and Actors for thread-safe operations

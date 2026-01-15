@@ -25,7 +25,8 @@ final class PostListViewModel {
                         postId: $0.postId,
                         title: $0.title,
                         previewText: $0.previewText,
-                        likesCount: $0.likesCount
+                        likesCount: $0.likesCount,
+                        timestamp: $0.timeshamp
                     )
                 }
                 self.onChange?()

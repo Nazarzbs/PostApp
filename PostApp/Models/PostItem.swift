@@ -12,4 +12,5 @@ struct PostItem: Hashable, Sendable {
     let title: String
     let previewText: String
     let likesCount: Int
+    let timestamp: TimeInterval
 }

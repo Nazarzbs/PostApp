@@ -16,7 +16,7 @@ final class PostListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = "Feed"
+        title = "Post Feed"
         view.backgroundColor = .systemBackground
 
         configureCollectionView()
@@ -83,38 +83,76 @@ extension PostListViewController: UICollectionViewDataSource {
             title: item.title,
             previewText: item.previewText,
             likesCount: item.likesCount,
+            timestamp: item.timestamp,
             isExpanded: isExpanded
         )
         
         postCell.onToggleExpanded = { [weak self] in
-            self?.viewModel.toggleExpanded(postId: item.postId)
-            self?.collectionView.reloadItems(at: [indexPath])
+            guard let self = self else { return }
+            self.viewModel.toggleExpanded(postId: item.postId)
+
+            self.collectionView.performBatchUpdates({
+                if let layout = self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+                    let context = UICollectionViewFlowLayoutInvalidationContext()
+                    context.invalidateItems(at: [indexPath])
+                    layout.invalidateLayout(with: context)
+                } else {
+                    self.collectionView.collectionViewLayout.invalidateLayout()
+                }
+            })
         }
         
         return postCell
     }
 }
 
-// MARK: - UICollectionViewDelegateFlowLayout
+extension PostListViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let item = viewModel.items[indexPath.item]
+        let detailsViewController = PostDetailsViewController(postId: item.postId)
+        
+        navigationController?.pushViewController(detailsViewController, animated: true)
+        
+        collectionView.deselectItem(at: indexPath, animated: true)
+    }
+}
+
 extension PostListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.frame.width - 32
         let item = viewModel.items[indexPath.item]
         let isExpanded = viewModel.isExpanded(postId: item.postId)
-        
-        // Base height for title, likes, button, and padding
-        let baseHeight: CGFloat = 80
-        
-        // Calculate text height
-        let textWidth = width - 24 // Account for cell padding
+
+        let baseHeight: CGFloat = 60
+
+        let textWidth = width - 24
         let titleHeight = heightForText(item.title, font: .preferredFont(forTextStyle: .headline), width: textWidth)
         let previewTextHeight = heightForText(item.previewText, font: .preferredFont(forTextStyle: .body), width: textWidth, numberOfLines: isExpanded ? 0 : 2)
-        
-        let totalHeight = baseHeight + titleHeight + previewTextHeight + 20 // Extra spacing
-        
-        return CGSize(width: width, height: max(120, totalHeight)) // Minimum height of 120
+
+        let needsExpandButton = textNeedsExpandButton(text: item.previewText, width: textWidth)
+        let expandButtonHeight: CGFloat = needsExpandButton ? 60 : 0
+
+        let totalHeight = baseHeight + titleHeight + previewTextHeight + expandButtonHeight + 20
+
+        return CGSize(width: width, height: max(120, totalHeight))
     }
-    
+
+    private func textNeedsExpandButton(text: String, width: CGFloat) -> Bool {
+        let label = UILabel()
+        label.text = text
+        label.font = .preferredFont(forTextStyle: .body)
+        label.numberOfLines = 2
+        label.lineBreakMode = .byTruncatingTail
+
+        let constrainedSize = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let twoLineSize = label.sizeThatFits(constrainedSize)
+
+        label.numberOfLines = 0
+        let fullSize = label.sizeThatFits(constrainedSize)
+
+        return fullSize.height > twoLineSize.height + 1
+    }
+
     private func heightForText(_ text: String, font: UIFont, width: CGFloat, numberOfLines: Int = 0) -> CGFloat {
         let label = UILabel()
         label.text = text
